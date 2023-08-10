@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>calculator</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+
+</head>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .main-container {
+        width: 30vw;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-color: rgb(68, 68, 67);
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .main-container h2 {
+        color: wheat;
+    }
+
+    .main-calculator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 8px;
+    }
+
+
+    .result-input {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .result-input div,
+    input {
+        width: 90%;
+        height: 20px;
+    }
+
+    .result-input div {
+        color: white;
+        background-color: black;
+        border: none;
+        border-radius: 5px;
+        font-weight: 800;
+        padding: 8px;
+    }
+
+    .result-input div {
+        padding: 8px;
+        margin: 4px 0px;
+        border: none;
+        outline: none;
+        border-radius: 5px;
+    }
+
+    .input-btns {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 7px;
+    }
+
+    .input-btns ul {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px;
+    }
+
+    .input-btns ul li {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        list-style: none;
+        margin: 3px;
+        background-color: rgb(52, 51, 51);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px;
+        width: 50px;
+        cursor: pointer;
+
+    }
+
+    #intermediate-result{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+</style>
+
+<body>
+    <div class="main-container">
+        <h2>My calculator</h2>
+        <div class="main-calculator">
+            <div class="result-input">
+                <div class="result-div">Result and previous result will be shown here</div>
+                <div id="intermediate-result">
+                    <span id="left"></span>
+                    <span id="right"></span>
+                </div>
+                <div class="all-inp">0</div>
+            </div>
+            <div class="input-btns">
+                <ul>
+                    <li>1</li>
+                    <li>2</li>
+                    <li>3</li>
+                    <li>+</li>
+                    <li>clear</li>
+                </ul>
+                <ul>
+                    <li>4</li>
+                    <li>5</li>
+                    <li>6</li>
+                    <li>-</li>
+                    <li>delete</li>
+                </ul>
+                <ul>
+                    <li>7</li>
+                    <li>8</li>
+                    <li>9</li>
+                    <li>*</li>
+                    <li>.</li>
+                </ul>
+                <ul>
+                    <li>0</li>
+                    <li>/</li>
+                    <li>%</li>
+                    <li>sqrt</li>
+                    <li>previous</li>
+                </ul>
+                <ul>
+                    <li>next</li>
+                    <li></li>
+                    <li>=</li>
+                    <li></li>
+                    <li>OFF</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+        let compString = "";
+        let pointCount = 0;
+        let arithCount = 0;
+        let str1 = "";
+        let sqrtCount = 0;
+        $("#intermediate-result").hide();
+        $(".input-btns li").click((e) => {
+            // $(".result-input div").text("Clicked");
+            // $(".result-input div").text(val*5);
+
+
+            let strVal = e.target.innerText;
+            let intVal = parseInt(strVal);
+            compString = compString + strVal;
+
+
+            if (intVal >= 0 && intVal <= 9) {
+                $(".all-inp").text(compString);
+            }
+
+            else if (strVal == ".") {
+                pointCount++;
+                if (pointCount > 1) {
+                    $(".result-div").text("Enter valid input");
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1200);
+                }
+                else if (compString == ".") {
+                    compString = "0."
+                    $(".all-inp").text(compString);
+                }
+                else {
+                    $(".all-inp").text(compString);
+                }
+            }
+            else if (strVal == "+" || strVal == "-" || strVal == "*" || strVal == "/" || strVal == "%") {
+                arithCount++;
+                if (arithCount > 1) {
+                    $(".result-div").text("Enter valid input");
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1000);
+                }
+                else {
+                    str1 = compString;
+                    compString = "";
+                    let num1 = str1.slice(0, str1.length - 1 );
+                    $("#left").text("First Number :  " + num1);
+                    $("#right").text("Operator is :  "+ strVal);
+                    $("#intermediate-result").show();
+                    $(".all-inp").text(compString+"0");
+                }
+            }
+            else if ( strVal == "sqrt" ){
+                if ( compString != "sqrt" ){
+                    $(".result-div").text("Enter valid input");
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1000);
+                }
+                else{
+                    $(".all-inp").text(compString+"(");
+                }
+            }
+
+            else if ( strVal == "=" ){
+                let res = str1+compString;
+                res = res.slice(0, res.length-1);
+                let result = eval(res);
+                // console.log(res);
+                $(".all-inp").hide();
+                $("#intermediate-result").hide();
+                $(".result-div").text(str1+compString+result);
+            }
+        })
+    </script>
+</body>
+
+</html>
